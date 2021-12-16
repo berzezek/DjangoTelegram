@@ -1,9 +1,8 @@
 from django.test import TestCase as TestCase
-from unittest import TestCase as UniTestCase
 from .models import Profile, Order
 
 
-class ProfileCase(DTestCase):
+class ProfileCase(TestCase):
 
     def test_setUp(self):
         p1 = Profile.objects.create(name="foo", external_id=101)

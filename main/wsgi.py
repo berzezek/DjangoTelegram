@@ -10,4 +10,4 @@ application = get_wsgi_application()
 
 
 result = call_command('tgbot')
-sys.exit(result)
+# sys.exit(result)
