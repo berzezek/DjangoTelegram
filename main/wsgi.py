@@ -9,5 +9,5 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'main.settings')
 application = get_wsgi_application()
 
 
-result = call_command('tgbot')
-sys.exit(result)
+# result = call_command('tgbot')
+# sys.exit(result)
