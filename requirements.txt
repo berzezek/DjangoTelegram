@@ -16,3 +16,4 @@ sqlparse==0.4.2
 tornado==6.1
 tzdata==2021.5
 tzlocal==4.1
+django-heroku==0.3.1

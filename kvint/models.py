@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.db import models
 from transitions import Machine
 from time import strftime
@@ -21,7 +22,6 @@ class OrderManager(models.Manager):
     ]
     machine = Machine(states=states)
 
-
     def create_order(self):
         self.machine.to_order()
         order_state = self.update(order_state=self.machine.state)
@@ -34,7 +34,7 @@ class OrderManager(models.Manager):
 
     def create_end(self):
         self.machine.to_end()
-        order_state = self.update(order_state=self.machine.state)
+        order_state = self.update(order_state=self.machine.state, created_at=timezone.now())
         return order_state
 
     def create_order_msg(self, msg):

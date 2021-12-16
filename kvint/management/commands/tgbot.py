@@ -8,7 +8,7 @@ bot = telebot.TeleBot(settings.TOKEN_TG)
 
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
-    bot.reply_to(message, "Howdy, how are you doing?")
+    bot.reply_to(message, "Привет, мы можем заказать пиццу!")
 
 
 def get_current_order(profile):
@@ -49,13 +49,13 @@ def do_order(message):
         profile=p,
     )
     Order.objects.create_order()
-    bot.send_message(message.chat.id, 'Какую пиццу Вы желаете заказать? Большую или маленькую?')
+    bot.send_message(message.chat.id, OrderManager.dialog[0])
 
 
 @bot.message_handler(func=lambda message: get_current_order(message.chat.id).order_state == 'order')
 def user_order(message):
     Order.objects.create_order_msg(msg=message.text)
-    bot.send_message(message.chat.id, "Как вы собираетесь платить?")
+    bot.send_message(message.chat.id, OrderManager.dialog[1])
     Order.objects.create_payment()
 
 
@@ -63,8 +63,9 @@ def user_order(message):
 def user_payment(message):
     profile = Profile.objects.get(external_id=message.chat.id)
     Order.objects.create_payment_msg(msg=message.text)
-    bot.send_message(message.chat.id, Order.get_info(Order.objects.get(profile=profile)))
     Order.objects.create_end()
+    bot.send_message(message.chat.id, Order.get_info(Order.objects.get(profile=profile)))
+
 
 
 class Command(BaseCommand):
