@@ -71,6 +71,8 @@ def user_payment(message):
 class Command(BaseCommand):
     help = 'Телеграмм бот'
 
-    def handle(*args, **kwargs):
-        print('Бот запущен!')
-        bot.infinity_polling()
+    if __name__ == "__main__":
+        def handle(*args, **kwargs):
+            print('Бот запущен!')
+            bot.infinity_polling()
+
