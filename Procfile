@@ -1,1 +1,1 @@
-web: python3ex manage.py tgbot
+web: python3 manage.py tgbot
