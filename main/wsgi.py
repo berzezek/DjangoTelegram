@@ -9,5 +9,5 @@ application = get_wsgi_application()
 
 from django.core.management import call_command
 
-result = call_command('tgbot')
+result = call_command('tgbot', plain=True)
 sys.exit(result)
