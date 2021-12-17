@@ -13,7 +13,6 @@ idna==3.3
 psycopg2-binary==2.9.2
 pycparser==2.21
 pyTelegramBotAPI==4.2.2
-python-telegram-bot==11.1.0
 pytz==2021.3
 pytz-deprecation-shim==0.1.0.post0
 PyYAML==6.0
@@ -27,5 +26,4 @@ tzlocal==4.1
 uritemplate==4.1.1
 urllib3==1.26.7
 whitenoise==5.3.0
-
 django-heroku==0.3.1

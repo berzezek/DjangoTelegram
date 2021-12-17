@@ -1,29 +1,39 @@
+from django.utils import timezone
+
 from django.test import TestCase as TestCase
 from .models import Profile, Order
+from .utils import create_order, continue_order, machine
 
 
 class ProfileCase(TestCase):
 
-    def test_setUp(self):
-        p1 = Profile.objects.create(name="foo", external_id=101)
-        for i in range(20):
-            p = Profile.objects.create(name="foo", external_id=i)
-            o, _ = Order.objects.get_or_create(
-                profile=p,
-            )
-            Order.objects.create_order()
-            Order.objects.create_payment()
-            Order.objects.create_end()
-            Order.objects.create_order_msg(msg='foo')
-            Order.objects.create_payment_msg(msg='foo')
-            o.get_info()
-
-class UtilTestCase(TestCase):
-
-    def test_info(self):
-        p = Profile.objects.create(name="foo", external_id=1001)
+    def setUp(self):
+        p, _ = Profile.objects.get_or_create(
+            external_id=1,
+            defaults={
+                'name': 'foo'
+            }
+        )
         o, _ = Order.objects.get_or_create(
             profile=p,
+            created_at=timezone.now()
         )
-        r = o.get_info()
-        self.assertTrue(r.startswith('Вы заказали:'))
+        create_order(1, machine.to_order)
+        continue_order(1, machine.to_payment, 1, 'order_msg', 'foo')
+        continue_order(1, machine.to_end, 1, 'payment_msg', 'foo')
+
+    def test_create_order(self):
+        c = create_order(1, machine.to_order)
+        self.assertTrue(c.startswith('Какую'))
+
+    def test_continue_order_payment(self):
+        c = continue_order(1, machine.to_payment, 1, 'order_msg', 'foo')
+        self.assertTrue(c.startswith('Как Вы'))
+
+    def test_continue_order_end(self):
+        c = continue_order(1, machine.to_end, 2, 'payment_msg', 'foo')
+        self.assertTrue(c.startswith('Спасибо'))
+
+    def test_get_info(self):
+        c = Order.objects.get(profile=Profile.objects.get(pk=1)).get_info()
+        self.assertTrue(c.startswith(f'Вы заказали'))
