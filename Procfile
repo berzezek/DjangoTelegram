@@ -1,1 +1,1 @@
-web: python3 manage.py tgbot -timeout 0
+web: python3 manage.py tgbot
