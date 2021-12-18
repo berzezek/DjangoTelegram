@@ -1,4 +1,3 @@
-
 from django.db import models
 from time import strftime
 
@@ -18,7 +17,8 @@ class Order(models.Model):
     payment_msg = models.CharField(verbose_name='Способ оплаты', max_length=255, default='')
 
     def get_info(self):
-        return f'Вы заказали: {self.order_msg} пиццу.\n' \
-               f'Способ оплаты: {self.payment_msg}.\n' \
-               f'{self.created_at.strftime("Дата заказа: %Y-%m-%d ... Время заказа: %H:%M")}.\n' \
-               f'Номер заказа {self.created_at.strftime("%m%d")}{self.pk}'
+        return f'Заказ № {self.created_at.strftime("%m%d")}{self.pk}\n' \
+               f'Пицца: {self.order_msg}.\n' \
+               f'Оплата: {self.payment_msg}.\n\n' \
+               f'{self.created_at.strftime("Дата заказа: %Y-%m-%d")}\n' \
+               f'{self.created_at.strftime("Время заказа: %H:%M")}\n'
