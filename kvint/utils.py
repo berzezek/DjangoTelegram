@@ -8,7 +8,7 @@ states = [
     'end'
 ]
 dialog = [
-    'Какую пиццу Вы желаете заказать?\nБольшая или маленькая?',
+    'Какую пиццу Вы желаете заказать?\nБольшую или маленькую?',
     'Как Вы собираетесь платить?',
     'Спасибо за заказ!'
 ]
@@ -39,8 +39,7 @@ def get_current_order(profile: int):
     :param profile: получаем из сообщения от пользователя.
     :return: Объект заказа.
     """
-    p = Profile.objects.get(external_id=profile)
-    o = Order.objects.filter(profile=p).order_by('-created_at').first()
+    o = Order.objects.filter(profile__external_id=profile).order_by('-created_at').first()
     return o
 
 
@@ -64,7 +63,7 @@ def start_dialog(chat_id: int, name: str):
 
 def continue_dialog(chat_id: int, func, index: int, order_field: str, msg: str):
     """
-    1. Находим последний заказ по профилю (параметр chat_id).
+    1. Находим последний заказ соответствующего профиля (параметр chat_id).
     2. Инициализируем состояние перехода (параметр func).
     3. Устанавливаем состояние перехода в поле модели заказа (Order)
     4. Устанавливаем время совершения заказа (created_at)
@@ -91,6 +90,13 @@ def continue_dialog(chat_id: int, func, index: int, order_field: str, msg: str):
 
 
 def get_count(profile):
-    p = Profile.objects.get(external_id=profile)
-    o = Order.objects.filter(profile=p, order_state='end')
+    o = Order.objects.filter(profile__external_id=profile, order_state='end')
     return o.count()
+
+
+def get_info(order):
+    return f'Заказ № {order.created_at.strftime("%m%d")}{order.pk}\n' \
+           f'Пицца: {order.order_msg}.\n' \
+           f'Оплата: {order.payment_msg}.\n\n' \
+           f'{order.created_at.strftime("Дата заказа: %Y-%m-%d")}\n' \
+           f'{order.created_at.strftime("Время заказа: %H:%M")}\n'

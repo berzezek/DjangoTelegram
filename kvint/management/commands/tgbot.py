@@ -1,8 +1,14 @@
 import telebot
 from django.conf import settings
 from django.core.management import BaseCommand
-from kvint.models import Profile, Order
-from kvint.utils import start_dialog, continue_dialog, machine, get_current_order, get_count
+from kvint.utils import (
+    start_dialog,
+    continue_dialog,
+    machine,
+    get_current_order,
+    get_count,
+    get_info
+)
 
 bot = telebot.TeleBot(settings.TOKEN_TG)
 
@@ -18,7 +24,7 @@ def do_info(message):
         o = get_current_order(message.chat.id)
         c = get_count(message.chat.id)
         if o.order_msg != '' and o.payment_msg != '':
-            bot.send_message(message.chat.id, f'{Order.get_info(o)}\nВсего заказов: {c}.')
+            bot.send_message(message.chat.id, f'{get_info(o)}\nВсего заказов: {c}.')
         elif o.order_msg == '':
             bot.send_message(message.chat.id, 'Вы не указали размер пиццы')
         elif o.payment_msg == '':
